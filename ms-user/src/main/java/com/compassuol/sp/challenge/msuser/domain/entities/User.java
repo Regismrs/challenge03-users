@@ -2,15 +2,18 @@ package com.compassuol.sp.challenge.msuser.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
-@Entity
-@Table(name = "users")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -28,14 +31,14 @@ public class User {
     @Column(length = 14, nullable = false)
     private String cpf;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private LocalDate birthdate;
+    private Date birthdate;
 
     @Column(nullable = false)
     private Boolean active;
