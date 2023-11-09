@@ -5,11 +5,15 @@ server:
 spring:
   application:
     name: ms-user
+  docker:
+    compose:
+      enabled: true
+      file: ./../docker-compose.yml
   rabbitmq:
     host: localhost
     port: 5672
   datasource:
-    url: jdbc:mysql://localhost:3306/db_users?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=America/Sao_Paulo
+    url: jdbc:mysql://localhost:3307/db_users?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=America/Sao_Paulo
     username: root
     password: root
   jpa:
