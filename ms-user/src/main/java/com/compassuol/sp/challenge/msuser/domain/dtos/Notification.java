@@ -1,4 +1,6 @@
-package com.compassuol.sp.challenge.msuser.domain.dto;
+package com.compassuol.sp.challenge.msuser.domain.dtos;
+
+import lombok.Builder;
 
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package com.compassuol.sp.challenge.msuser.services;
 
-import com.compassuol.sp.challenge.msuser.domain.dto.Notification;
+import com.compassuol.sp.challenge.msuser.domain.dtos.Notification;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 

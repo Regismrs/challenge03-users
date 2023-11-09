@@ -1,8 +1,12 @@
 package com.compassuol.sp.challenge.msuser.exceptions;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
+import io.jsonwebtoken.security.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.nio.file.AccessDeniedException;
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,19 +65,6 @@ public class ApplicationExceptionHandler {
         );
     }
 
-    // enum invalid value
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({HttpMessageNotReadableException.class})
-    public ExceptionsResponse handleBusinessException(HttpMessageNotReadableException e){
-        String usefullMessage = e.getMessage().split("String")[1];
-        return new ExceptionsResponse(
-                400,
-                HttpStatus.BAD_REQUEST.name(),
-                usefullMessage,
-                new ArrayList<>()
-        );
-    }
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFound.class)
     public ExceptionsResponse handleExceptionNotFound(NotFound e){
@@ -83,26 +76,47 @@ public class ApplicationExceptionHandler {
         );
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({SQLIntegrityConstraintViolationException.class})
-    public ExceptionsResponse handleBusinessException(SQLIntegrityConstraintViolationException e){
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ExceptionsResponse handleExceptionsBadRequest(DataIntegrityViolationException e){
         return new ExceptionsResponse(
-                400,
-                "Bad Request",
-                e.getMessage(),
+                409,
+                "CONFLICT",
+                e.getMostSpecificCause().getMessage(),
                 new ArrayList<>()
         );
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(RuntimeException.class)
-    public ExceptionsResponse handleAllException(){
+    @ExceptionHandler({Exception.class})
+    public ExceptionsResponse handleAllException(Exception exception){
+        exception.printStackTrace();
+        if (exception instanceof BadCredentialsException) {
+            return new ExceptionsResponse(
+                    401,
+                    "The username or password is incorrect",
+                    exception.getMessage(),
+                    new ArrayList<>());
+        } else if (exception instanceof SignatureException) {
 
-        return new ExceptionsResponse(
-                500,
-                "Internal Server Error",
-                "Unexpected Error",
-                new ArrayList<>()
-        );
+            return new ExceptionsResponse(
+                    403,
+                    "The JWT signature is invalid",
+                    exception.getMessage(),
+                    new ArrayList<>());
+        } else if (exception instanceof ExpiredJwtException) {
+
+            return new ExceptionsResponse(
+                    403,
+                    "The JWT token has expired",
+                    exception.getMessage(),
+                    new ArrayList<>());
+        } else {
+            return new ExceptionsResponse(
+                    500,
+                    "Internal Server Error",
+                    exception.getMessage(),
+                    new ArrayList<>());
+        }
     }
 }

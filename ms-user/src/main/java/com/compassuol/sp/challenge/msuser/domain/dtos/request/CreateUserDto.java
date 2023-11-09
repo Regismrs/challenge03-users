@@ -1,20 +1,18 @@
-package com.compassuol.sp.challenge.msuser.domain.dto;
+package com.compassuol.sp.challenge.msuser.domain.dtos.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 @Getter
-@Setter
-public class UserRequest {
+public class CreateUserDto {
     @NotNull(message = "can't be null")
     @Size(min = 3, message = "need have at least 3 chars")
     private String firstName;
