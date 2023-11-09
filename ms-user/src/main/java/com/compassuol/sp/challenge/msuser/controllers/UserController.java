@@ -25,13 +25,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> authenticate(
+            @RequestBody @Valid LoginRequest loginRequest) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userService.login(loginRequest));
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserResponse> register(@RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<UserResponse> register(
+            @RequestBody @Valid CreateUserDto createUserDto) {
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.createUser(createUserDto));
     }

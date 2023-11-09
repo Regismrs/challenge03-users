@@ -1,8 +1,14 @@
 package com.compassuol.sp.challenge.msuser.domain.dtos.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
 public class LoginRequest {
+    @Email(message = "invalid email address.")
+    @NotNull(message = "can't be null.")
     private String email;
-    private String password;
+    @NotNull(message = "can't be null.")
+    private String password; //nao vou avisar que o minimo eh 6
 
     public String getEmail() {
         return email;
