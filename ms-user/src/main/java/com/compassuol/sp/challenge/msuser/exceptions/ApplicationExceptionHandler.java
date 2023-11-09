@@ -115,7 +115,7 @@ public class ApplicationExceptionHandler {
             return new ExceptionsResponse(
                     500,
                     "Internal Server Error",
-                    exception.getMessage(),
+                    "",
                     new ArrayList<>());
         }
     }
