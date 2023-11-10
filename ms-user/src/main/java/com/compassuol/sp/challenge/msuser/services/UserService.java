@@ -7,9 +7,11 @@ import com.compassuol.sp.challenge.msuser.domain.dtos.request.UpdateUserPassword
 import com.compassuol.sp.challenge.msuser.domain.dtos.response.LoginResponse;
 import com.compassuol.sp.challenge.msuser.domain.dtos.response.UserResponse;
 import com.compassuol.sp.challenge.msuser.domain.entities.User;
+import com.compassuol.sp.challenge.msuser.domain.enums.EventsEnum;
 import com.compassuol.sp.challenge.msuser.exceptions.NotFound;
 import com.compassuol.sp.challenge.msuser.mapper.UserMapper;
 import com.compassuol.sp.challenge.msuser.repositories.UserRepository;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +52,8 @@ public class UserService {
     public UserResponse updateUser(Long id, UpdateUserDto updateDto) {
         User user = UserMapper.applyDtoToUser(updateDto, findUserById(id));
 
+        mqService.send(user.getEmail(), EventsEnum.UPDATE);
+
         return UserMapper.toDto(userRepository.save(user));
     }
 
@@ -57,6 +61,8 @@ public class UserService {
         User user = findUserById(id);
         user.setPassword(
                 passwordEncoder.encode(updateDto.getPassword()));
+
+        mqService.send(user.getEmail(), EventsEnum.UPDATE_PASSWORD);
 
         return UserMapper.toDto(userRepository.save(user));
     }
@@ -68,7 +74,7 @@ public class UserService {
 
         User saved = userRepository.save(user);
 
-        mqService.send(saved.getEmail(), "CREATE");
+        mqService.send(saved.getEmail(), EventsEnum.CREATE);
 
         return UserMapper.toDto(saved);
     }
@@ -79,6 +85,8 @@ public class UserService {
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         System.out.println(jwtToken);
+
+        mqService.send(loginRequest.getEmail(), EventsEnum.LOGIN);
 
         return LoginResponse.builder()
                 .token(jwtToken)
