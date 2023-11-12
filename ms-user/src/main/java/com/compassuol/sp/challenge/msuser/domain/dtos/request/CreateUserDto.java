@@ -2,6 +2,7 @@ package com.compassuol.sp.challenge.msuser.domain.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 @Getter
+@AllArgsConstructor
 public class CreateUserDto {
     @NotNull(message = "can't be null")
     @Size(min = 3, message = "need have at least 3 characters.")

@@ -1,12 +1,14 @@
 package com.compassuol.sp.challenge.msuser.domain.dtos.request;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 @Getter
+@AllArgsConstructor
 public class UpdateUserDto {
     @NotBlank(message = "can't be null.")
     @Size(min = 3, message = "need have at least 3 characters.")
