@@ -35,3 +35,4 @@ build/
 ### etc ###
 /notes/**
 **/mysql-data/**
+**/mongo-data/**
