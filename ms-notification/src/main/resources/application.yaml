@@ -1,1 +1,26 @@
-
+server:
+  port: 8081
+env:
+  mongo:
+    host: localhost
+    port: 27017
+    database: msnotifications
+    username: root
+    password: root
+  rabbit:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+spring:
+  application:
+    name: ms-notification
+  rabbitmq:
+    host: ${env.rabbit.host}
+    port: ${env.rabbit.port}
+    username: ${env.rabbit.username}
+    password: ${env.rabbit.password}
+    virtual-host: /
+  data:
+    mongodb:
+      uri: mongodb://${env.mongo.username}:${env.mongo.password}@${env.mongo.host}:${env.mongo.port}/${env.mongo.database}?authSource=admin
