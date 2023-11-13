@@ -1,0 +1,40 @@
+server:
+  port: 8080
+env:
+  db:
+    host: localhost
+    port: 3306
+    database: db_users
+    username: root
+    password: root
+  rabbit:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+spring:
+  application:
+    name: ms-user
+  rabbitmq:
+    host: ${env.rabbit.host}
+    port: ${env.rabbit.port}
+    username: ${env.rabbit.username}
+    password: ${env.rabbit.password}
+    virtual-host: /
+  datasource:
+    url: jdbc:mysql://${env.db.host}:${env.db.port}/${env.db.database}?createDatabaseIfNotExist=true&useTimezone=true&serverTimezone=America/Sao_Paulo
+    username: ${env.db.username}
+    password: ${env.db.password}
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+security:
+  jwt:
+    secret-key: 4662a111eccdc722582a89543a294e898e9888a9d2f96f6baa1a326f99e4908c  #HMAC-256
+    expiration-time: 3600000
