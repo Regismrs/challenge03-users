@@ -1,7 +1,9 @@
 package com.compassuol.sp.challenge.msuser.domain.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.Date;
 
