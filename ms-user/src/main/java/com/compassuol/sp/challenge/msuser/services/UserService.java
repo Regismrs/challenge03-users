@@ -11,7 +11,6 @@ import com.compassuol.sp.challenge.msuser.domain.enums.EventsEnum;
 import com.compassuol.sp.challenge.msuser.exceptions.NotFound;
 import com.compassuol.sp.challenge.msuser.mapper.UserMapper;
 import com.compassuol.sp.challenge.msuser.repositories.UserRepository;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,9 +51,11 @@ public class UserService {
     public UserResponse updateUser(Long id, UpdateUserDto updateDto) {
         User user = UserMapper.applyDtoToUser(updateDto, findUserById(id));
 
-        mqService.send(user.getEmail(), EventsEnum.UPDATE);
+        User saved = userRepository.save(user);
 
-        return UserMapper.toDto(userRepository.save(user));
+        mqService.send(saved.getEmail(), EventsEnum.UPDATE);
+
+        return UserMapper.toDto(saved);
     }
 
     public UserResponse updateUserPassword(Long id, UpdateUserPasswordDto updateDto) {
