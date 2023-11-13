@@ -1,0 +1,69 @@
+# This is useless...
+version: '3.9'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_users
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-container
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./definitions.json:/etc/rabbitmq/definitions.json:ro
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb-container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./mongo-data/db:/var/lib/mongodb
+      - ./init-mongo.js:/var/lib/mongodb/init-mongo-jsjs:ro
+  ms-user:
+    container_name: ms-user-container
+    build:
+        context: ms-user
+        dockerfile: Dockerfile
+    image: ms-user:latest
+    environment:
+      ENV_DB_HOST: mysql
+      ENV_DB_PORT: 3306
+      ENV_DB_DATABASE: db_users
+      ENV_DB_USERNAME: root
+      ENV_DB_PASSWORD: root
+      ENV_RABBIT_HOST: rabbitmq
+      ENV_RABBIT_PORT: 5672
+      ENV_RABBIT_USERNAME: guest
+      ENV_RABBIT_PASSWORD: guest
+    ports:
+        - 8080:8080
+  ms-notification:
+    container_name: ms-notification-container
+    build:
+        context: ms-notification
+        dockerfile: Dockerfile
+    image: ms-notification:latest
+    environment:
+      ENV_MONGO_HOST: mongodb
+      ENV_MONGO_PORT: 27017
+      ENV_MONGO_DATABASE: msnotifications
+      ENV_MONGO_USERNAME: root
+      ENV_MONGO_PASSWORD: root
+      ENV_RABBIT_HOST: rabbitmq
+      ENV_RABBIT_PORT: 5672
+      ENV_RABBIT_USERNAME: guest
+      ENV_RABBIT_PASSWORD: guest
+    ports:
+        - 8081:8081
