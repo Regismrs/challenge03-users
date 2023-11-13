@@ -48,3 +48,21 @@ services:
       ENV_RABBIT_PASSWORD: guest
     ports:
         - 8080:8080
+  ms-notification:
+    container_name: ms-notification-container
+    build:
+        context: ms-notification
+        dockerfile: Dockerfile
+    image: ms-notification:latest
+    environment:
+      ENV_MONGO_HOST: mongodb
+      ENV_MONGO_PORT: 27017
+      ENV_MONGO_DATABASE: msnotifications
+      ENV_MONGO_USERNAME: root
+      ENV_MONGO_PASSWORD: root
+      ENV_RABBIT_HOST: rabbitmq
+      ENV_RABBIT_PORT: 5672
+      ENV_RABBIT_USERNAME: guest
+      ENV_RABBIT_PASSWORD: guest
+    ports:
+        - 8081:8081
