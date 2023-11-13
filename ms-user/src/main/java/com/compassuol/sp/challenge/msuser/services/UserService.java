@@ -85,8 +85,6 @@ public class UserService {
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
-        System.out.println(jwtToken);
-
         mqService.send(loginRequest.getEmail(), EventsEnum.LOGIN);
 
         return LoginResponse.builder()
