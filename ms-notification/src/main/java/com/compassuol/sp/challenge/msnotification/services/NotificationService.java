@@ -21,7 +21,6 @@ public class NotificationService {
 
     @RabbitListener(queues = "notifications")
     public void onMessageReceived(String message) {
-        System.out.println("Received [" + message + "]");
         saveNotification(message);
     }
 
